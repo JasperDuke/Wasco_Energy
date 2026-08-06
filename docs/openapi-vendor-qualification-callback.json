@@ -1,0 +1,330 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Wasco Vendor Qualification API - Assessment Callback",
+    "version": "1.0.0",
+    "description": "Submit AI-generated vendor qualification assessment results after reviewing a vendor onboarding submission. Use the exact `case_id` from the agent trigger context. When additional documents are required, set `need_more_files` with the missing document name — the agent should email the vendor and the portal will show a clarification request. No authentication required."
+  },
+  "servers": [
+    {
+      "url": "http://localhost:5000/api",
+      "description": "Local Development Server"
+    },
+    {
+      "url": "https://api-wasco-vq.atenxion.ai/api",
+      "description": "Production Server"
+    }
+  ],
+  "paths": {
+    "/atenxion/callback": {
+      "post": {
+        "operationId": "submitVendorQualificationAssessment",
+        "tags": ["Atenxion Callbacks"],
+        "summary": "Submit vendor qualification assessment",
+        "description": "Create or update the AI assessment for a vendor qualification application. Use the exact `case_id` returned in the trigger payload (e.g. WASCO-VQ-000001). Include `overall_score`, section assessments, and recommendation. Set `need_more_files` when the vendor must submit additional documents — the portal will move the application to Need Clarification and display an email notification message to the vendor.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/VendorQualificationCallbackRequest"
+              },
+              "example": {
+                "case_id": "WASCO-VQ-000001",
+                "overall_score": 78,
+                "risk_band": "Medium",
+                "mandatory_gap": "Incomplete compliance documentation for offshore operations",
+                "need_more_files": "ISO 9001 Certificate",
+                "recommendation": "Conditionally Approve",
+                "human_validation_required": true,
+                "financial_assessment": {
+                  "score": 82,
+                  "summary": "Revenue is stable with acceptable debt ratio and positive cash flow trends."
+                },
+                "technical_assessment": {
+                  "score": 75,
+                  "summary": "Vendor demonstrates capability for the requested scope with limited prior project references."
+                },
+                "compliance_assessment": {
+                  "score": 70,
+                  "summary": "Most mandatory certifications are present; ISO 9001 certificate is missing."
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Assessment callback processed successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VendorQualificationCallbackResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request — missing or invalid case_id",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorMessage"
+                },
+                "example": {
+                  "success": false,
+                  "message": "case_id is required"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Application not found for case_id",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorMessage"
+                },
+                "example": {
+                  "success": false,
+                  "message": "Application not found for case"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorMessage"
+                },
+                "example": {
+                  "success": false,
+                  "message": "An unexpected server error occurred"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "ErrorMessage": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "message": {
+            "type": "string"
+          }
+        }
+      },
+      "AssessmentSection": {
+        "type": "object",
+        "description": "Assessment details for a single evaluation area. The portal reads `score`, `overall_score`, or `value` as the numeric score.",
+        "properties": {
+          "score": {
+            "oneOf": [
+              { "type": "number" },
+              { "type": "string" }
+            ],
+            "description": "Primary score for this section (0-100). Numeric strings such as \"82\" are accepted."
+          },
+          "overall_score": {
+            "oneOf": [
+              { "type": "number" },
+              { "type": "string" }
+            ],
+            "description": "Alternative score field accepted by the portal"
+          },
+          "value": {
+            "oneOf": [
+              { "type": "number" },
+              { "type": "string" }
+            ],
+            "description": "Alternative score field accepted by the portal"
+          },
+          "summary": {
+            "type": "string",
+            "description": "Narrative assessment summary for this section"
+          }
+        }
+      },
+      "VendorQualificationCallbackRequest": {
+        "type": "object",
+        "required": ["case_id"],
+        "properties": {
+          "case_id": {
+            "type": "string",
+            "description": "Application case ID from the trigger payload (e.g. WASCO-VQ-000001)"
+          },
+          "overall_score": {
+            "oneOf": [
+              { "type": "number" },
+              { "type": "string" }
+            ],
+            "description": "Overall qualification score (0-100)"
+          },
+          "risk_band": {
+            "type": "string",
+            "description": "Risk classification label, e.g. Low, Medium, or High"
+          },
+          "mandatory_gap": {
+            "type": "string",
+            "description": "Outstanding requirement or compliance gap shown in the assessment summary"
+          },
+          "need_more_files": {
+            "type": "string",
+            "description": "Missing document name or description. When set, the agent should email the vendor. The portal moves the application to Need Clarification and displays: \"{need_more_files} missing. We informed via email. Please have a look.\""
+          },
+          "recommendation": {
+            "type": "string",
+            "description": "AI recommendation. Accepted values include Approve, Conditionally Approve, and Reject"
+          },
+          "human_validation_required": {
+            "type": "boolean",
+            "description": "Whether staff/admin human validation is required before final decision. Defaults to true when omitted."
+          },
+          "financial_assessment": {
+            "$ref": "#/components/schemas/AssessmentSection"
+          },
+          "technical_assessment": {
+            "$ref": "#/components/schemas/AssessmentSection"
+          },
+          "compliance_assessment": {
+            "$ref": "#/components/schemas/AssessmentSection"
+          }
+        }
+      },
+      "ApplicationAssessment": {
+        "type": "object",
+        "properties": {
+          "overallScore": {
+            "type": "number"
+          },
+          "riskBand": {
+            "type": "string",
+            "enum": ["Low", "Medium", "High"]
+          },
+          "financialScore": {
+            "type": "number"
+          },
+          "technicalScore": {
+            "type": "number"
+          },
+          "complianceScore": {
+            "type": "number"
+          },
+          "recommendation": {
+            "type": "string"
+          },
+          "outstandingRequirement": {
+            "type": "string"
+          },
+          "needMoreFiles": {
+            "type": "string"
+          },
+          "assessedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "UploadedDocument": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "originalName": {
+            "type": "string"
+          },
+          "size": {
+            "type": "number"
+          },
+          "mimeType": {
+            "type": "string"
+          },
+          "uploadedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "path": {
+            "type": "string",
+            "description": "Relative public file path, e.g. /uploads/public/{vendorId}/{applicationId}/{filename}"
+          },
+          "url": {
+            "type": "string",
+            "description": "Absolute public URL for viewing the uploaded file"
+          },
+          "filename": {
+            "type": "string"
+          }
+        }
+      },
+      "ApplicationRecord": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "caseId": {
+            "type": "string"
+          },
+          "vendorId": {
+            "type": "string"
+          },
+          "vendorName": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string",
+            "description": "Application status after callback. Set to need_clarification when need_more_files is provided; otherwise assessment_completed."
+          },
+          "uploadedDocuments": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/UploadedDocument"
+              }
+            }
+          },
+          "assessment": {
+            "$ref": "#/components/schemas/ApplicationAssessment"
+          },
+          "recommendation": {
+            "type": "string"
+          }
+        }
+      },
+      "VendorQualificationCallbackResponse": {
+        "type": "object",
+        "required": ["success", "message", "data"],
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "enum": [true]
+          },
+          "message": {
+            "type": "string",
+            "enum": ["Callback processed"]
+          },
+          "data": {
+            "type": "object",
+            "required": ["application"],
+            "properties": {
+              "application": {
+                "$ref": "#/components/schemas/ApplicationRecord"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
