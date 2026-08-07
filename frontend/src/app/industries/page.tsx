@@ -1,6 +1,7 @@
 'use client';
 
 import Container from '@mui/material/Container';
+import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid2';
 import PublicLayout from '@/components/layouts/PublicLayout';
 import PageHero from '@/components/public/PageHero';
@@ -31,7 +32,7 @@ const industries = [
     title: 'Marine & Offshore',
     description:
       'Offshore platforms, subsea infrastructure, and marine coating solutions for harsh operating environments.',
-    image: PUBLIC_IMAGES.industries,
+    image: PUBLIC_IMAGES.marine,
   },
   {
     title: 'Industrial Manufacturing',
@@ -43,7 +44,7 @@ const industries = [
     title: 'Infrastructure',
     description:
       'National infrastructure projects including pipelines, industrial parks, and critical energy logistics hubs.',
-    image: PUBLIC_IMAGES.globalOps,
+    image: PUBLIC_IMAGES.infrastructure,
   },
 ];
 
@@ -62,10 +63,12 @@ export default function IndustriesPage() {
           title="Sectors We Serve"
           subtitle="Our global footprint and technical depth enable us to deliver world-class outcomes across the energy and industrial landscape."
         />
-        <Grid container spacing={3}>
+        <Grid container spacing={3} alignItems="stretch">
           {industries.map((industry) => (
-            <Grid key={industry.title} size={{ xs: 12, sm: 6 }}>
-              <ImageFeatureCard {...industry} />
+            <Grid key={industry.title} size={{ xs: 12, sm: 6 }} sx={{ display: 'flex' }}>
+              <Box sx={{ width: '100%' }}>
+                <ImageFeatureCard {...industry} />
+              </Box>
             </Grid>
           ))}
         </Grid>

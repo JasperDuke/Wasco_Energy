@@ -7,7 +7,9 @@ import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid2';
 import Alert from '@mui/material/Alert';
 import PublicLayout from '@/components/layouts/PublicLayout';
+import PageHero from '@/components/public/PageHero';
 import { AppTextField, AppButton } from '@/components/common';
+import { PUBLIC_IMAGES } from '@/config/publicContent';
 
 export default function ContactPage() {
   const [submitted, setSubmitted] = useState(false);
@@ -19,14 +21,12 @@ export default function ContactPage() {
 
   return (
     <PublicLayout>
-      <Box sx={{ backgroundColor: 'primary.main', color: 'white', py: 6 }}>
-        <Container maxWidth="lg">
-          <Typography variant="h3" fontWeight={700}>Contact Us</Typography>
-          <Typography variant="h6" sx={{ opacity: 0.9, mt: 1, fontWeight: 400 }}>
-            Get in touch with our procurement team
-          </Typography>
-        </Container>
-      </Box>
+      <PageHero
+        title="Contact Us"
+        subtitle="Get in touch with our procurement team"
+        image={PUBLIC_IMAGES.contact}
+        height={{ xs: 280, md: 360 }}
+      />
       <Container maxWidth="lg" sx={{ py: 6 }}>
         <Grid container spacing={4}>
           <Grid size={{ xs: 12, md: 5 }}>

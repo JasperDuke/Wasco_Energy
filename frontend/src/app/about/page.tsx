@@ -43,6 +43,7 @@ export default function AboutPage() {
                 backgroundImage: `url(${PUBLIC_IMAGES.globalOps})`,
                 backgroundSize: 'cover',
                 backgroundPosition: 'center',
+                backgroundColor: 'grey.200',
                 boxShadow: '0 16px 48px rgba(0,0,0,0.1)',
               }}
             />
@@ -53,7 +54,7 @@ export default function AboutPage() {
       <Box sx={{ backgroundColor: 'background.default', py: { xs: 6, md: 10 } }}>
         <Container maxWidth="lg">
           <SectionHeading title="Our Mission, Vision & Values" align="left" />
-          <Grid container spacing={3}>
+          <Grid container spacing={3} alignItems="stretch">
             {[
               {
                 title: 'Our Mission',
@@ -68,9 +69,9 @@ export default function AboutPage() {
                 text: 'Safety, integrity, excellence, teamwork, and sustainability guide every decision across our operations.',
               },
             ].map((item) => (
-              <Grid key={item.title} size={{ xs: 12, md: 4 }}>
-                <Card sx={{ height: '100%' }}>
-                  <CardContent sx={{ p: 3 }}>
+              <Grid key={item.title} size={{ xs: 12, md: 4 }} sx={{ display: 'flex' }}>
+                <Card sx={{ height: '100%', width: '100%' }}>
+                  <CardContent sx={{ p: 3, height: '100%' }}>
                     <Typography variant="h6" fontWeight={700} gutterBottom color="primary.main">
                       {item.title}
                     </Typography>
@@ -90,20 +91,43 @@ export default function AboutPage() {
           title="Sustainability at Our Core"
           subtitle="We go beyond business goals — integrating economic, environmental, and social considerations into our strategy, with a commitment to net zero operational emissions by 2026."
         />
-        <Grid container spacing={3}>
+        <Grid container spacing={3} alignItems="stretch">
           {[
             { stat: '2026', label: 'Net Zero Operational Emissions Target' },
             { stat: '12', label: 'Countries of Operation' },
             { stat: '40+', label: 'Nationalities in Our Workforce' },
             { stat: '5,000+', label: 'Employees Worldwide' },
           ].map((item) => (
-            <Grid key={item.label} size={{ xs: 6, md: 3 }}>
-              <Card variant="outlined" sx={{ textAlign: 'center', py: 2 }}>
-                <CardContent>
+            <Grid key={item.label} size={{ xs: 6, md: 3 }} sx={{ display: 'flex' }}>
+              <Card
+                variant="outlined"
+                sx={{
+                  textAlign: 'center',
+                  py: 2,
+                  height: '100%',
+                  width: '100%',
+                  display: 'flex',
+                  flexDirection: 'column',
+                }}
+              >
+                <CardContent
+                  sx={{
+                    flex: 1,
+                    display: 'flex',
+                    flexDirection: 'column',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    gap: 1,
+                  }}
+                >
                   <Typography variant="h4" fontWeight={700} color="primary.main">
                     {item.stat}
                   </Typography>
-                  <Typography variant="body2" color="text.secondary">
+                  <Typography
+                    variant="body2"
+                    color="text.secondary"
+                    sx={{ minHeight: { xs: 40, md: 48 }, display: 'flex', alignItems: 'center' }}
+                  >
                     {item.label}
                   </Typography>
                 </CardContent>

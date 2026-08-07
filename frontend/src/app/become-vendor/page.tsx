@@ -8,7 +8,9 @@ import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import Link from 'next/link';
 import PublicLayout from '@/components/layouts/PublicLayout';
+import PageHero from '@/components/public/PageHero';
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
+import { PUBLIC_IMAGES } from '@/config/publicContent';
 
 const steps = [
   'Register your company on our vendor portal',
@@ -21,14 +23,12 @@ const steps = [
 export default function BecomeVendorPage() {
   return (
     <PublicLayout>
-      <Box sx={{ backgroundColor: 'primary.main', color: 'white', py: 6 }}>
-        <Container maxWidth="lg">
-          <Typography variant="h3" fontWeight={700}>Become a Vendor</Typography>
-          <Typography variant="h6" sx={{ opacity: 0.9, mt: 1, fontWeight: 400 }}>
-            Join our global network of qualified suppliers
-          </Typography>
-        </Container>
-      </Box>
+      <PageHero
+        title="Become a Vendor"
+        subtitle="Join our global network of qualified suppliers"
+        image={PUBLIC_IMAGES.vendor}
+        height={{ xs: 280, md: 360 }}
+      />
       <Container maxWidth="lg" sx={{ py: 6 }}>
         <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' }, gap: 4 }}>
           <Box>
