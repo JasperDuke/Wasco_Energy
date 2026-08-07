@@ -142,14 +142,16 @@ async function sendWebhook({
   payload: Record<string, unknown>;
   label: string;
 }): Promise<AtenxionTriggerResult> {
-  const attachments = Array.isArray(payload.attachments) ? payload.attachments : [];
+  const requestHeaders = {
+    Authorization: '[REDACTED]',
+    'Content-Type': 'application/json',
+    Origin: getTriggerOrigin(config),
+  };
 
-  console.log(`[webhook] calling ${label}`, {
-    event_id: payload.event_id,
-    applicationId: payload.applicationId,
-    caseId: payload.caseId,
-    origin: getTriggerOrigin(config),
-    attachments,
+  console.log(`[webhook] ${label} OUTGOING request`, {
+    url: config.apiUrl,
+    headers: requestHeaders,
+    payload,
   });
 
   try {
@@ -162,9 +164,10 @@ async function sendWebhook({
       timeout: 30000,
     });
 
-    console.log(`[webhook] ${label} success`, {
+    console.log(`[webhook] ${label} OUTGOING response`, {
       event_id: payload.event_id,
       status: response.status,
+      data: response.data,
     });
 
     return {
@@ -174,7 +177,7 @@ async function sendWebhook({
     };
   } catch (error) {
     if (axios.isAxiosError(error)) {
-      console.error(`[webhook] ${label} failed`, {
+      console.error(`[webhook] ${label} OUTGOING failed`, {
         event_id: payload.event_id,
         status: error.response?.status,
         data: error.response?.data || error.message,
@@ -187,7 +190,7 @@ async function sendWebhook({
       };
     }
 
-    console.error(`[webhook] ${label} failed`, {
+    console.error(`[webhook] ${label} OUTGOING failed`, {
       event_id: payload.event_id,
       message: error instanceof Error ? error.message : 'Unknown error',
     });
