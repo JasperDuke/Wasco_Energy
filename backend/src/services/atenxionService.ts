@@ -271,9 +271,9 @@ export async function triggerAtenxion(
     vendorCategory: profile.vendorCategory,
     vendorProducts: profile.products,
     vendorCompanyDescription: profile.companyDescription,
-    vendor: buildTriggerVendorPayload(profile),
     form_fields: buildFormFieldsPayload(form, application.formData as Record<string, unknown>),
     attachments,
+    file_urls: attachments,
     message:
       'A vendor qualification application has been submitted. Please analyze the attached documents and provide a detailed assessment report.',
   };
