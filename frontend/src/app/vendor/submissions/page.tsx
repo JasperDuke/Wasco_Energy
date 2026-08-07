@@ -10,6 +10,10 @@ import { AppDataGrid, ApplicationStatusChip, LoadingSkeleton } from '@/component
 import { vendorNavItems } from '@/config/navigation';
 import { useAuthStore } from '@/stores/authStore';
 import { useApplicationStore } from '@/stores/applicationStore';
+import {
+  hasPendingReviewApplications,
+  usePollingRefresh,
+} from '@/hooks/usePollingRefresh';
 import { formatDate } from '@/utils/helpers';
 import { Application } from '@/types';
 
@@ -21,6 +25,11 @@ export default function MySubmissionsPage() {
   useEffect(() => {
     if (user) fetchByVendor(user.id);
   }, [user, fetchByVendor]);
+
+  usePollingRefresh(
+    !!user && hasPendingReviewApplications(applications),
+    () => fetchByVendor(user?.id, { silent: true })
+  );
 
   const columns: GridColDef[] = [
     { field: 'caseId', headerName: 'Case ID', flex: 1, minWidth: 150 },

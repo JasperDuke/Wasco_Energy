@@ -8,8 +8,8 @@ interface ApplicationState {
   applications: Application[];
   currentApplication: Application | null;
   isLoading: boolean;
-  fetchByVendor: (vendorId: string) => Promise<void>;
-  fetchById: (id: string) => Promise<void>;
+  fetchByVendor: (vendorId?: string, options?: { silent?: boolean }) => Promise<void>;
+  fetchById: (id: string, options?: { silent?: boolean }) => Promise<void>;
   submitApplication: (
     vendorId: string,
     vendorName: string,
@@ -26,16 +26,26 @@ export const useApplicationStore = create<ApplicationState>((set) => ({
   currentApplication: null,
   isLoading: false,
 
-  fetchByVendor: async (vendorId) => {
-    set({ isLoading: true });
-    const applications = await applicationService.getByVendorId();
-    set({ applications, isLoading: false });
+  fetchByVendor: async (_vendorId, options) => {
+    if (!options?.silent) set({ isLoading: true });
+    try {
+      const applications = await applicationService.getByVendorId();
+      set({ applications, isLoading: false });
+    } catch (error) {
+      if (!options?.silent) set({ isLoading: false });
+      throw error;
+    }
   },
 
-  fetchById: async (id) => {
-    set({ isLoading: true });
-    const currentApplication = await applicationService.getById(id);
-    set({ currentApplication, isLoading: false });
+  fetchById: async (id, options) => {
+    if (!options?.silent) set({ isLoading: true });
+    try {
+      const currentApplication = await applicationService.getById(id);
+      set({ currentApplication, isLoading: false });
+    } catch (error) {
+      if (!options?.silent) set({ isLoading: false });
+      throw error;
+    }
   },
 
   submitApplication: async (vendorId, vendorName, vendorCategory, formId, formData, uploadedDocuments) => {

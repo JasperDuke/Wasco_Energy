@@ -26,6 +26,7 @@ router.post(
 );
 router.get('/', applicationController.getAll);
 router.get('/:id', applicationController.getById);
+router.delete('/:id', applicationController.remove);
 router.post(
   '/:id/clarifications',
   vendorOnly,

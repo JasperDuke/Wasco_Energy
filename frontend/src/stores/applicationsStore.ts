@@ -13,7 +13,7 @@ interface ApplicationsState {
   setStatusFilter: (status: ApplicationStatus | 'all') => void;
   setSearchQuery: (query: string) => void;
   setVendorFilter: (vendor: string) => void;
-  fetchAll: () => Promise<void>;
+  fetchAll: (options?: { silent?: boolean }) => Promise<void>;
   getFiltered: () => Application[];
 }
 
@@ -28,10 +28,15 @@ export const useApplicationsStore = create<ApplicationsState>((set, get) => ({
   setSearchQuery: (searchQuery) => set({ searchQuery }),
   setVendorFilter: (vendorFilter) => set({ vendorFilter }),
 
-  fetchAll: async () => {
-    set({ isLoading: true });
-    const applications = await applicationService.getAll();
-    set({ applications, isLoading: false });
+  fetchAll: async (options) => {
+    if (!options?.silent) set({ isLoading: true });
+    try {
+      const applications = await applicationService.getAll();
+      set({ applications, isLoading: false });
+    } catch (error) {
+      if (!options?.silent) set({ isLoading: false });
+      throw error;
+    }
   },
 
   getFiltered: () => {

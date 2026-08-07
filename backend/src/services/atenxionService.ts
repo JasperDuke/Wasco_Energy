@@ -7,6 +7,7 @@ import { User } from '../models/User';
 import * as settingsService from './settingsService';
 import { IUploadedFileMeta } from '../models/applicationSchemas';
 import { env } from '../config/env';
+import { buildFormFieldsPayload, buildTriggerVendorPayload } from '../utils/vendorFormSync';
 
 const TRIGGER_TYPE_VENDOR_QUALIFICATION = 'vendor_qualification';
 
@@ -267,6 +268,8 @@ export async function triggerAtenxion(
     vendorCategory: profile.vendorCategory,
     vendorProducts: profile.products,
     vendorCompanyDescription: profile.companyDescription,
+    vendor: buildTriggerVendorPayload(profile),
+    form_fields: buildFormFieldsPayload(form, application.formData as Record<string, unknown>),
     attachments,
     message:
       'A vendor qualification application has been submitted. Please analyze the attached documents and provide a detailed assessment report.',

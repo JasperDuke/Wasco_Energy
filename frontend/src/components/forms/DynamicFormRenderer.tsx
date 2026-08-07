@@ -33,7 +33,14 @@ export default function DynamicFormRenderer<T extends FieldValues>({
 
   const renderField = (field: FormField) => {
     const name = field.key as Path<T>;
-    const rules = { required: field.required ? `${field.label} is required` : false };
+    const rules = {
+      required: field.required ? `${field.label} is required` : false,
+      validate:
+        field.type === 'checkbox' && field.required
+          ? (value: unknown) =>
+              (Array.isArray(value) && value.length > 0) || `${field.label} is required`
+          : undefined,
+    };
 
     switch (field.type) {
       case 'textarea':

@@ -107,4 +107,8 @@ export const applicationService = {
     );
     return data.data!.application;
   },
+
+  async delete(id: string): Promise<void> {
+    await api.delete(`/applications/${id}`);
+  },
 };

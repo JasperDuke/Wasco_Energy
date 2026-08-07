@@ -33,3 +33,13 @@ export const getVendorByUserId = asyncHandler(async (req: AuthRequest, res: Resp
   const profile = await vendorService.getVendorProfile(getParamId(req, 'id'));
   res.json({ success: true, data: { profile } });
 });
+
+export const adminUpdateVendor = asyncHandler(async (req: AuthRequest, res: Response) => {
+  const { applicationId, ...profileData } = req.body as Record<string, unknown>;
+  const profile = await vendorService.adminUpdateVendorProfile(
+    getParamId(req, 'id'),
+    profileData,
+    typeof applicationId === 'string' ? applicationId : undefined
+  );
+  res.json({ success: true, message: 'Vendor profile updated', data: { profile } });
+});

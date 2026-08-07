@@ -5,34 +5,44 @@ import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Grid from '@mui/material/Grid2';
 import Alert from '@mui/material/Alert';
-import { Application, HumanValidationAction, UploadedFile } from '@/types';
+import Dialog from '@mui/material/Dialog';
+import DialogTitle from '@mui/material/DialogTitle';
+import DialogContent from '@mui/material/DialogContent';
+import DialogActions from '@mui/material/DialogActions';
+import { Application, HumanValidationAction, UploadedFile, VendorProfile } from '@/types';
 import {
   AppCard,
   ApplicationStatusChip,
-  LoadingSkeleton,
+  AppButton,
 } from '@/components/common';
 import ApplicationTimeline from './ApplicationTimeline';
 import AssessmentSummary from './AssessmentSummary';
 import HumanValidationPanel from './HumanValidationPanel';
 import UploadedDocumentsList from './UploadedDocumentsList';
+import VendorProfileEditor, { VendorProfileFormData } from '@/components/vendors/VendorProfileEditor';
 import FileUploadField from '@/components/forms/FileUploadField';
-import { AppButton } from '@/components/common';
 import { formatDate, formatNeedMoreFilesMessage } from '@/utils/helpers';
 import { APPLICATION_STATUS_LABELS } from '@/utils/constants';
 
 interface ApplicationDetailViewProps {
   application: Application;
   mode: 'vendor' | 'staff' | 'admin';
+  vendorProfile?: VendorProfile;
   onHumanValidation?: (action: HumanValidationAction, notes?: string) => Promise<void>;
   onUploadClarification?: (fieldKey: string, files: UploadedFile[]) => Promise<void>;
+  onUpdateVendorProfile?: (data: VendorProfileFormData) => Promise<void>;
+  onDelete?: () => Promise<void>;
   showHumanValidation?: boolean;
 }
 
 export default function ApplicationDetailView({
   application,
   mode,
+  vendorProfile,
   onHumanValidation,
   onUploadClarification,
+  onUpdateVendorProfile,
+  onDelete,
   showHumanValidation = false,
 }: ApplicationDetailViewProps) {
   const isProcessing = ['processing', 'proposal_under_review', 'submitted', 'pending', 'pending_approval'].includes(
@@ -51,18 +61,50 @@ export default function ApplicationDetailView({
     : null;
   const [clarificationFiles, setClarificationFiles] = useState<UploadedFile[]>([]);
   const [uploading, setUploading] = useState(false);
+  const [deleteOpen, setDeleteOpen] = useState(false);
+  const [deleting, setDeleting] = useState(false);
+  const canEditVendor = (mode === 'admin' || mode === 'staff') && !!vendorProfile && !!onUpdateVendorProfile;
+  const canDelete = !!onDelete;
+
+  const handleDelete = async () => {
+    if (!onDelete) return;
+    setDeleting(true);
+    try {
+      await onDelete();
+      setDeleteOpen(false);
+    } finally {
+      setDeleting(false);
+    }
+  };
 
   return (
     <Box>
-      <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 3 }}>
-        <Typography variant="h5" fontWeight={600}>
-          {application.caseId}
-        </Typography>
-        <ApplicationStatusChip status={application.status} />
+      <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 2, mb: 3 }}>
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+          <Typography variant="h5" fontWeight={600}>
+            {application.caseId}
+          </Typography>
+          <ApplicationStatusChip status={application.status} />
+        </Box>
+        {canDelete && (
+          <AppButton variant="outlined" color="error" onClick={() => setDeleteOpen(true)}>
+            Delete Submission
+          </AppButton>
+        )}
       </Box>
 
       <Grid container spacing={3}>
         <Grid size={{ xs: 12, md: 8 }}>
+          {vendorProfile && (
+            <AppCard title="Company Information" sx={{ mb: 3 }}>
+              <VendorProfileEditor
+                profile={vendorProfile}
+                readOnly={!canEditVendor}
+                onSave={onUpdateVendorProfile ?? (async () => {})}
+              />
+            </AppCard>
+          )}
+
           <AppCard title="Submission Information" sx={{ mb: 3 }}>
             <Grid container spacing={2}>
               <Grid size={{ xs: 12, sm: 6 }}>
@@ -125,10 +167,6 @@ export default function ApplicationDetailView({
               <Typography variant="subtitle2" fontWeight={600}>Processing</Typography>
               <Typography variant="body2">Proposal Under Review — assessment results will be available shortly.</Typography>
             </Alert>
-          )}
-
-          {isProcessing && mode !== 'vendor' && (
-            <LoadingSkeleton variant="detail" count={1} />
           )}
 
           {isAssessmentDone && application.assessment && (
@@ -194,6 +232,22 @@ export default function ApplicationDetailView({
           </AppCard>
         </Grid>
       </Grid>
+
+      <Dialog open={deleteOpen} onClose={() => !deleting && setDeleteOpen(false)}>
+        <DialogTitle>Delete Submission?</DialogTitle>
+        <DialogContent>
+          <Typography variant="body2">
+            This will permanently delete application {application.caseId} and its assessment data.
+            This action cannot be undone.
+          </Typography>
+        </DialogContent>
+        <DialogActions>
+          <AppButton onClick={() => setDeleteOpen(false)} disabled={deleting}>Cancel</AppButton>
+          <AppButton variant="contained" color="error" onClick={handleDelete} disabled={deleting}>
+            {deleting ? 'Deleting...' : 'Delete'}
+          </AppButton>
+        </DialogActions>
+      </Dialog>
     </Box>
   );
 }

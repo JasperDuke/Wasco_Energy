@@ -1,7 +1,9 @@
 import { VendorProfile, IVendorProfile } from '../models/VendorProfile';
+import { Application } from '../models/Application';
 import { User } from '../models/User';
 import { AppError } from '../utils/AppError';
 import { UserStatus } from '../types';
+import { syncApplicationVendorSnapshot } from '../utils/vendorFormSync';
 
 export interface VendorProfileResponse {
   id: string;
@@ -57,12 +59,53 @@ export async function getVendorProfile(userId: string): Promise<VendorProfileRes
   return toVendorResponse(profile);
 }
 
+export interface AdminVendorUpdateInput {
+  companyName?: string;
+  vendorGroup?: string;
+  parentCompany?: string;
+  supplyingEntity?: string;
+  businessRegistrationNumber?: string;
+  country?: string;
+  address?: string;
+  website?: string;
+  companyEmail?: string;
+  companyPhone?: string;
+  primaryContactName?: string;
+  primaryContactEmail?: string;
+  primaryContactPhone?: string;
+  vendorCategory?: string;
+  products?: string;
+  companyDescription?: string;
+}
+
 export async function updateVendorProfile(
   userId: string,
   data: Partial<Pick<IVendorProfile, 'address' | 'companyPhone' | 'website' | 'companyDescription' | 'products'>>
 ): Promise<VendorProfileResponse> {
   const profile = await VendorProfile.findOneAndUpdate({ userId }, data, { new: true });
   if (!profile) throw new AppError('Vendor profile not found', 404);
+  return toVendorResponse(profile);
+}
+
+export async function adminUpdateVendorProfile(
+  userId: string,
+  data: AdminVendorUpdateInput,
+  applicationId?: string
+): Promise<VendorProfileResponse> {
+  const profile = await VendorProfile.findOneAndUpdate({ userId }, data, {
+    new: true,
+    runValidators: true,
+  });
+  if (!profile) throw new AppError('Vendor profile not found', 404);
+
+  if (applicationId) {
+    const app = await Application.findById(applicationId);
+    if (app && app.vendorId.toString() === userId) {
+      syncApplicationVendorSnapshot(app, profile);
+      await app.save();
+    }
+  }
+
   return toVendorResponse(profile);
 }
 

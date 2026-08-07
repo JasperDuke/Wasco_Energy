@@ -12,6 +12,8 @@ export interface IFormField {
   maxFileSize?: number;
   /** Category sent to Atenxion as document_type (defaults to label) */
   documentType?: string;
+  /** VendorProfile field to sync on submit (e.g. vendorGroup) */
+  vendorField?: string;
   order: number;
   helpText?: string;
 }
@@ -55,6 +57,7 @@ const formFieldSchema = new Schema<IFormField>(
     acceptedFileTypes: [{ type: String }],
     maxFileSize: { type: Number },
     documentType: { type: String, trim: true },
+    vendorField: { type: String, trim: true },
     order: { type: Number, required: true },
     helpText: { type: String, trim: true },
   },

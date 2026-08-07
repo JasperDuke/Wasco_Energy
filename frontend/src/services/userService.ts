@@ -21,6 +21,18 @@ export const userService = {
     return data.data!.vendor;
   },
 
+  async updateVendor(
+    userId: string,
+    profileData: Partial<VendorProfile>,
+    applicationId?: string
+  ): Promise<VendorProfile> {
+    const { data } = await api.put<ApiResponse<{ profile: VendorProfile }>>(
+      `/vendors/${userId}`,
+      { ...profileData, applicationId }
+    );
+    return data.data!.profile;
+  },
+
   async getStaffUsers(): Promise<StaffUser[]> {
     const { data } = await api.get<ApiResponse<{ staff: StaffUser[] }>>('/staff');
     return data.data!.staff;

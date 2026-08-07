@@ -72,6 +72,16 @@ export const humanValidation = asyncHandler(async (req: AuthRequest, res: Respon
   res.json({ success: true, message: 'Decision recorded', data: { application } });
 });
 
+export const remove = asyncHandler(async (req: AuthRequest, res: Response) => {
+  const user = req.user!;
+  await applicationService.deleteApplication(
+    getParamId(req, 'id'),
+    user.userId,
+    user.role
+  );
+  res.json({ success: true, message: 'Application deleted' });
+});
+
 export const getDashboardStats = asyncHandler(async (_req: AuthRequest, res: Response) => {
   const stats = await applicationService.getDashboardStats();
   res.json({ success: true, data: { stats } });

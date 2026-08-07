@@ -36,6 +36,8 @@ export interface ApplicationAssessmentResponse {
   assessedAt: string;
 }
 
+import { VendorProfileResponse } from '../services/vendorService';
+
 export interface ApplicationResponse {
   id: string;
   caseId: string;
@@ -55,6 +57,7 @@ export interface ApplicationResponse {
   updatedAt: string;
   timeline: TimelineEventResponse[];
   documentFieldLabels?: Record<string, string>;
+  vendorProfile?: VendorProfileResponse;
 }
 
 function buildPublicFileUrl(filePath?: string): string | undefined {
@@ -119,7 +122,8 @@ export function mapUploadedDocuments(
 export function mapApplication(
   app: IApplication,
   result?: IApplicationResult | null,
-  documentFieldLabels?: Record<string, string>
+  documentFieldLabels?: Record<string, string>,
+  vendorProfile?: VendorProfileResponse
 ): ApplicationResponse {
   return {
     id: app._id.toString(),
@@ -149,6 +153,7 @@ export function mapApplication(
       actor: t.actor,
     })),
     documentFieldLabels,
+    vendorProfile,
   };
 }
 

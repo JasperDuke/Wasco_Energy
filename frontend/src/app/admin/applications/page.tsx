@@ -10,12 +10,17 @@ import ApplicationFilterBar from '@/components/applications/ApplicationFilterBar
 import { AppDataGrid, ApplicationStatusChip, LoadingSkeleton } from '@/components/common';
 import { adminNavItems } from '@/config/navigation';
 import { useApplicationsStore } from '@/stores/applicationsStore';
+import {
+  hasPendingReviewApplications,
+  usePollingRefresh,
+} from '@/hooks/usePollingRefresh';
 import { formatDate } from '@/utils/helpers';
 import { Application } from '@/types';
 
 export default function AdminApplicationsPage() {
   const router = useRouter();
   const {
+    applications,
     isLoading,
     statusFilter,
     searchQuery,
@@ -30,6 +35,11 @@ export default function AdminApplicationsPage() {
   useEffect(() => {
     fetchAll();
   }, [fetchAll]);
+
+  usePollingRefresh(
+    hasPendingReviewApplications(applications),
+    () => fetchAll({ silent: true })
+  );
 
   const filtered = getFiltered();
   const vendors = [...new Map(filtered.map((a) => [a.vendorId, { id: a.vendorId, name: a.vendorName }])).values()];

@@ -25,6 +25,10 @@ import { vendorNavItems } from '@/config/navigation';
 import { useAuthStore } from '@/stores/authStore';
 import { useApplicationStore } from '@/stores/applicationStore';
 import { useVendorStore } from '@/stores/vendorStore';
+import {
+  hasPendingReviewApplications,
+  usePollingRefresh,
+} from '@/hooks/usePollingRefresh';
 import { formatDate, formatNeedMoreFilesMessage } from '@/utils/helpers';
 
 export default function VendorDashboardPage() {
@@ -39,6 +43,11 @@ export default function VendorDashboardPage() {
       fetchProfile(user.id);
     }
   }, [user, fetchByVendor, fetchProfile]);
+
+  usePollingRefresh(
+    !!user && hasPendingReviewApplications(applications),
+    () => fetchByVendor(user?.id, { silent: true })
+  );
 
   const currentSubmission = applications.find((a) =>
     ['processing', 'proposal_under_review', 'need_clarification', 'submitted'].includes(a.status)

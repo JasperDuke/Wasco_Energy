@@ -140,6 +140,7 @@ export interface Application {
   updatedAt: string;
   timeline: TimelineEvent[];
   documentFieldLabels?: Record<string, string>;
+  vendorProfile?: VendorProfile;
 }
 
 export interface StaffUser {
@@ -169,6 +170,7 @@ export interface FormField {
   acceptedFileTypes?: string[];
   maxFileSize?: number;
   documentType?: string;
+  vendorField?: string;
   order: number;
   helpText?: string;
 }

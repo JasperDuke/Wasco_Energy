@@ -12,6 +12,12 @@ import {
   mapApplication,
 } from '../utils/applicationMapper';
 import { triggerAtenxion, mapCallbackRecommendation, AtenxionCallbackPayload } from './atenxionService';
+import {
+  isEmptyFormValue,
+  syncApplicationVendorSnapshot,
+  syncVendorProfileFromFormData,
+} from '../utils/vendorFormSync';
+import { getVendorProfile, VendorProfileResponse } from './vendorService';
 import { ApplicationStatus, HumanValidationAction, Recommendation } from '../types';
 import { IUploadedFileMeta } from '../models/applicationSchemas';
 import { toFileMeta, UploadFileResponse } from './uploadService';
@@ -52,10 +58,11 @@ async function getDocumentFieldLabels(
 
 async function enrichApplicationResponse(
   app: IApplication,
-  result?: IApplicationResult | null
+  result?: IApplicationResult | null,
+  vendorProfile?: VendorProfileResponse | null
 ): Promise<ApplicationResponse> {
   const documentFieldLabels = await getDocumentFieldLabels(app.formId);
-  return mapApplication(app, result, documentFieldLabels);
+  return mapApplication(app, result, documentFieldLabels, vendorProfile ?? undefined);
 }
 
 function validateFormSubmission(
@@ -68,7 +75,7 @@ function validateFormSubmission(
   for (const field of form.fields) {
     if (field.required && field.type !== 'file') {
       const value = formData[field.key];
-      if (value === undefined || value === null || value === '') {
+      if (isEmptyFormValue(value, field.type)) {
         throw new AppError(`${field.label} is required`, 400);
       }
     }
@@ -133,6 +140,10 @@ export async function finalizeApplication(
   const form = await DynamicForm.findById(app.formId);
   validateFormSubmission(form, input.formData, input.uploadedDocuments);
 
+  syncVendorProfileFromFormData(profile, form!, input.formData);
+  syncApplicationVendorSnapshot(app, profile);
+  await profile.save();
+
   const now = new Date();
   app.formData = input.formData;
   app.uploadedDocuments = mapUploadedInput(input.uploadedDocuments);
@@ -181,8 +192,33 @@ export async function getApplicationById(
     throw new AppError('Access denied', 403);
   }
 
+  let vendorProfile: VendorProfileResponse | null = null;
+  if (['staff', 'admin'].includes(requesterRole)) {
+    try {
+      vendorProfile = await getVendorProfile(app.vendorId.toString());
+    } catch {
+      vendorProfile = null;
+    }
+  }
+
   const result = await ApplicationResult.findOne({ applicationId: app._id });
-  return enrichApplicationResponse(app, result);
+  return enrichApplicationResponse(app, result, vendorProfile);
+}
+
+export async function deleteApplication(
+  id: string,
+  requesterId: string,
+  requesterRole: string
+): Promise<void> {
+  const app = await Application.findById(id);
+  if (!app) throw new AppError('Application not found', 404);
+
+  if (requesterRole === 'vendor' && app.vendorId.toString() !== requesterId) {
+    throw new AppError('Access denied', 403);
+  }
+
+  await ApplicationResult.deleteOne({ applicationId: app._id });
+  await Application.findByIdAndDelete(id);
 }
 
 export async function getApplications(
