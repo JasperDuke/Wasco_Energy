@@ -9,7 +9,7 @@ import Dialog from '@mui/material/Dialog';
 import DialogTitle from '@mui/material/DialogTitle';
 import DialogContent from '@mui/material/DialogContent';
 import DialogActions from '@mui/material/DialogActions';
-import { Application, HumanValidationAction, UploadedFile, VendorProfile } from '@/types';
+import { Application, HumanValidationAction, VendorProfile } from '@/types';
 import {
   AppCard,
   ApplicationStatusChip,
@@ -20,7 +20,6 @@ import AssessmentSummary from './AssessmentSummary';
 import HumanValidationPanel from './HumanValidationPanel';
 import UploadedDocumentsList from './UploadedDocumentsList';
 import VendorProfileEditor, { VendorProfileFormData } from '@/components/vendors/VendorProfileEditor';
-import FileUploadField from '@/components/forms/FileUploadField';
 import { formatDate, formatNeedMoreFilesMessage } from '@/utils/helpers';
 import { APPLICATION_STATUS_LABELS } from '@/utils/constants';
 
@@ -29,7 +28,6 @@ interface ApplicationDetailViewProps {
   mode: 'vendor' | 'staff' | 'admin';
   vendorProfile?: VendorProfile;
   onHumanValidation?: (action: HumanValidationAction, notes?: string) => Promise<void>;
-  onUploadClarification?: (fieldKey: string, files: UploadedFile[]) => Promise<void>;
   onUpdateVendorProfile?: (data: VendorProfileFormData) => Promise<void>;
   onDelete?: () => Promise<void>;
   showHumanValidation?: boolean;
@@ -40,7 +38,6 @@ export default function ApplicationDetailView({
   mode,
   vendorProfile,
   onHumanValidation,
-  onUploadClarification,
   onUpdateVendorProfile,
   onDelete,
   showHumanValidation = false,
@@ -55,12 +52,9 @@ export default function ApplicationDetailView({
     'conditionally_approved',
     'rejected',
   ].includes(application.status);
-  const needsClarification = application.status === 'need_clarification';
   const needMoreFilesMessage = application.assessment?.needMoreFiles
     ? formatNeedMoreFilesMessage(application.assessment.needMoreFiles)
     : null;
-  const [clarificationFiles, setClarificationFiles] = useState<UploadedFile[]>([]);
-  const [uploading, setUploading] = useState(false);
   const [deleteOpen, setDeleteOpen] = useState(false);
   const [deleting, setDeleting] = useState(false);
   const canEditVendor = (mode === 'admin' || mode === 'staff') && !!vendorProfile && !!onUpdateVendorProfile;
@@ -173,38 +167,6 @@ export default function ApplicationDetailView({
             <Box sx={{ mb: 3 }}>
               <AssessmentSummary assessment={application.assessment} />
             </Box>
-          )}
-
-          {needsClarification && mode === 'vendor' && onUploadClarification && (
-            <AppCard title="Upload Missing Document" sx={{ mb: 3 }}>
-              <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
-                {needMoreFilesMessage ??
-                  application.assessment?.outstandingRequirement ??
-                  'Please upload the requested clarification documents.'}
-              </Typography>
-              <FileUploadField
-                label="Clarification Document"
-                value={clarificationFiles}
-                onChange={setClarificationFiles}
-                accept=".pdf,.jpg,.png"
-              />
-              <AppButton
-                variant="contained"
-                sx={{ mt: 2 }}
-                disabled={clarificationFiles.length === 0 || uploading}
-                onClick={async () => {
-                  setUploading(true);
-                  try {
-                    await onUploadClarification('clarification_document', clarificationFiles);
-                    setClarificationFiles([]);
-                  } finally {
-                    setUploading(false);
-                  }
-                }}
-              >
-                {uploading ? 'Uploading...' : 'Submit Document'}
-              </AppButton>
-            </AppCard>
           )}
 
           {showHumanValidation && isAssessmentDone && onHumanValidation && (

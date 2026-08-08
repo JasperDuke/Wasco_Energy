@@ -15,7 +15,7 @@ export default function VendorSubmissionDetailPage() {
   const params = useParams();
   const router = useRouter();
   const id = (params?.id ?? '') as string;
-  const { currentApplication, isLoading, fetchById, uploadClarification } = useApplicationStore();
+  const { currentApplication, isLoading, fetchById } = useApplicationStore();
 
   useEffect(() => {
     if (id) fetchById(id);
@@ -44,9 +44,6 @@ export default function VendorSubmissionDetailPage() {
           <ApplicationDetailView
             application={currentApplication}
             mode="vendor"
-            onUploadClarification={async (fieldKey, files) => {
-              await uploadClarification(id, fieldKey, files);
-            }}
             onDelete={async () => {
               await applicationService.delete(id);
               router.push('/vendor/submissions');

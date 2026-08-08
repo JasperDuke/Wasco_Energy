@@ -7,8 +7,6 @@ import LinearProgress from '@mui/material/LinearProgress';
 import Divider from '@mui/material/Divider';
 import { ApplicationAssessment } from '@/types';
 import { AppCard } from '@/components/common';
-import { formatNeedMoreFilesMessage } from '@/utils/helpers';
-import Alert from '@mui/material/Alert';
 
 interface AssessmentSummaryProps {
   assessment: ApplicationAssessment;
@@ -47,17 +45,6 @@ export default function AssessmentSummary({ assessment }: AssessmentSummaryProps
 
   return (
     <AppCard title="Assessment Summary">
-      {assessment.needMoreFiles && (
-        <Alert severity="warning" sx={{ mb: 3 }}>
-          <Typography variant="subtitle2" fontWeight={600} gutterBottom>
-            Additional Documents Required
-          </Typography>
-          <Typography variant="body2">
-            {formatNeedMoreFilesMessage(assessment.needMoreFiles)}
-          </Typography>
-        </Alert>
-      )}
-
       <Grid container spacing={3}>
         <Grid size={{ xs: 12, md: 4 }}>
           <Box sx={{ textAlign: 'center', p: 2 }}>
