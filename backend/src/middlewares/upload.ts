@@ -13,8 +13,10 @@ function resolveUploadDir(req: Request): string {
     (req.query.applicationId as string | undefined) ??
     (req.body?.applicationId as string | undefined);
 
+  // Flat dir for short URLs: /uploads/{filename}
+  // Legacy paths under public/{vendorId}/{applicationId}/ remain served as-is.
   if (applicationId && authReq.user?.userId) {
-    return path.join(env.uploadDir, 'public', authReq.user.userId, applicationId);
+    return env.uploadDir;
   }
 
   return path.join(env.uploadDir, 'temp');

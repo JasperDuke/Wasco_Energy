@@ -28,7 +28,7 @@ export const uploadFile = asyncHandler(async (req: AuthRequest, res: Response) =
   const vendorId = req.user!.userId;
   await assertVendorApplicationAccess(applicationId, vendorId);
 
-  const file = saveUploadedFile(req.file, vendorId, applicationId);
+  const file = saveUploadedFile(req.file);
   res.status(201).json({ success: true, message: 'File uploaded', data: { file } });
 });
 
@@ -42,6 +42,6 @@ export const uploadFiles = asyncHandler(async (req: AuthRequest, res: Response) 
   const vendorId = req.user!.userId;
   await assertVendorApplicationAccess(applicationId, vendorId);
 
-  const uploaded = files.map((file) => saveUploadedFile(file, vendorId, applicationId));
+  const uploaded = files.map((file) => saveUploadedFile(file));
   res.status(201).json({ success: true, message: 'Files uploaded', data: { files: uploaded } });
 });

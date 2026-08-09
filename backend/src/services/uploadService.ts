@@ -13,24 +13,16 @@ export interface UploadFileResponse {
   uploadedAt: string;
 }
 
-export function buildUploadPublicPath(
-  vendorId: string,
-  applicationId: string,
-  filename: string
-): string {
-  return `/uploads/public/${vendorId}/${applicationId}/${filename}`;
+export function buildUploadPublicPath(filename: string): string {
+  return `/uploads/${filename}`;
 }
 
-export function saveUploadedFile(
-  file: Express.Multer.File,
-  vendorId: string,
-  applicationId: string
-): UploadFileResponse {
+export function saveUploadedFile(file: Express.Multer.File): UploadFileResponse {
   return {
     id: generateId('file'),
     filename: file.filename,
     originalName: file.originalname,
-    path: buildUploadPublicPath(vendorId, applicationId, file.filename),
+    path: buildUploadPublicPath(file.filename),
     size: file.size,
     mimeType: file.mimetype,
     uploadedAt: new Date().toISOString(),
