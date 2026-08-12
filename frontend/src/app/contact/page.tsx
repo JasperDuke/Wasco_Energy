@@ -10,6 +10,7 @@ import PublicLayout from '@/components/layouts/PublicLayout';
 import PageHero from '@/components/public/PageHero';
 import { AppTextField, AppButton } from '@/components/common';
 import { PUBLIC_IMAGES } from '@/config/publicContent';
+import { BRAND } from '@/config/data';
 
 export default function ContactPage() {
   const [submitted, setSubmitted] = useState(false);
@@ -32,12 +33,12 @@ export default function ContactPage() {
           <Grid size={{ xs: 12, md: 5 }}>
             <Typography variant="h6" fontWeight={600} gutterBottom>Office</Typography>
             <Typography variant="body2" color="text.secondary" paragraph>
-              Level 12, Menara Wasco<br />
+              Level 12, {BRAND.buildingName}<br />
               Jalan Ampang<br />
               50450 Kuala Lumpur, Malaysia
             </Typography>
             <Typography variant="h6" fontWeight={600} gutterBottom sx={{ mt: 3 }}>Email</Typography>
-            <Typography variant="body2" color="text.secondary">procurement@wascoenergy.com</Typography>
+            <Typography variant="body2" color="text.secondary">{BRAND.contactEmail}</Typography>
             <Typography variant="h6" fontWeight={600} gutterBottom sx={{ mt: 3 }}>Phone</Typography>
             <Typography variant="body2" color="text.secondary">+60 3 1234 5678</Typography>
           </Grid>

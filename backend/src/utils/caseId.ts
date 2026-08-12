@@ -7,5 +7,5 @@ export async function generateCaseId(): Promise<string> {
     { new: true, upsert: true }
   );
   const seq = counter?.seq ?? 1;
-  return `WASCO-VQ-${String(seq).padStart(6, '0')}`;
+  return `APEX-VQ-${String(seq).padStart(6, '0')}`;
 }

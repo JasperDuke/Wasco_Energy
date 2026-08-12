@@ -17,6 +17,7 @@ import { authService } from '@/services/authService';
 import { useAuthStore } from '@/stores/authStore';
 import { getDashboardPath } from '@/utils/helpers';
 import { PUBLIC_IMAGES } from '@/config/publicContent';
+import { BRAND } from '@/config/data';
 
 interface LoginInput {
   email: string;
@@ -53,7 +54,7 @@ export default function LoginPage() {
     <AuthSplitLayout
       heroImage={PUBLIC_IMAGES.heroPipeline}
       heroTitle="Welcome Back to the Vendor Portal"
-      heroSubtitle="Sign in to manage your vendor profile, track qualification status, and collaborate with Wasco Energy procurement teams."
+      heroSubtitle={`Sign in to manage your vendor profile, track qualification status, and collaborate with ${BRAND.fullName} procurement teams.`}
     >
       <Paper
         elevation={0}
@@ -65,13 +66,13 @@ export default function LoginPage() {
         }}
       >
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, mb: 3 }}>
-          <Image src="/favicon.svg" alt="Wasco Energy" width={36} height={36} />
+          <Image src="/favicon.svg" alt={BRAND.fullName} width={36} height={36} />
           <Box>
             <Typography variant="subtitle1" fontWeight={700} color="primary.main" lineHeight={1.2}>
-              Wasco Energy
+              {BRAND.fullName}
             </Typography>
             <Typography variant="caption" color="text.secondary">
-              Vendor Qualification Portal
+              {BRAND.portalTagline}
             </Typography>
           </Box>
         </Box>

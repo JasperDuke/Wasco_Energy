@@ -7,11 +7,11 @@ import { DynamicForm } from '../models/DynamicForm';
 async function seed(): Promise<void> {
   await connectDatabase();
 
-  const adminExists = await User.findOne({ email: 'admin@wasco.com' });
+  const adminExists = await User.findOne({ email: 'admin@apex.com' });
   if (!adminExists) {
     const hashedPassword = await bcrypt.hash('123456', 12);
     await User.create({
-      email: 'admin@wasco.com',
+      email: 'admin@apex.com',
       password: hashedPassword,
       firstName: 'System',
       lastName: 'Admin',
@@ -19,14 +19,14 @@ async function seed(): Promise<void> {
       status: 'approved',
       isActive: true,
     });
-    console.log('Admin user created: admin@wasco.com');
+    console.log('Admin user created: admin@apex.com');
   }
 
-  const staffExists = await User.findOne({ email: 'staff@wasco.com' });
+  const staffExists = await User.findOne({ email: 'staff@apex.com' });
   if (!staffExists) {
     const hashedPassword = await bcrypt.hash('123456', 12);
     await User.create({
-      email: 'staff@wasco.com',
+      email: 'staff@apex.com',
       password: hashedPassword,
       firstName: 'Sarah',
       lastName: 'Lim',
@@ -35,7 +35,7 @@ async function seed(): Promise<void> {
       isActive: true,
       department: 'Procurement',
     });
-    console.log('Staff user created: staff@wasco.com');
+    console.log('Staff user created: staff@apex.com');
   }
 
   const vendorExists = await User.findOne({ email: 'vendor@pantech.com' });

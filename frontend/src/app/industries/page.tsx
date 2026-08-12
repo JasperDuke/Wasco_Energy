@@ -8,6 +8,7 @@ import PageHero from '@/components/public/PageHero';
 import SectionHeading from '@/components/public/SectionHeading';
 import ImageFeatureCard from '@/components/public/ImageFeatureCard';
 import { PUBLIC_IMAGES } from '@/config/publicContent';
+import { BRAND } from '@/config/data';
 
 const industries = [
   {
@@ -54,7 +55,7 @@ export default function IndustriesPage() {
       <PageHero
         overline="Industries"
         title="Specialised Solutions Across Diverse Sectors"
-        subtitle="Wasco serves energy, industrial, and infrastructure clients worldwide with tailored solutions for each sector's unique challenges."
+        subtitle={`${BRAND.name} serves energy, industrial, and infrastructure clients worldwide with tailored solutions for each sector's unique challenges.`}
         image={PUBLIC_IMAGES.industries}
       />
 

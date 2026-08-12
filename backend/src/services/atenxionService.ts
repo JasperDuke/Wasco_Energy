@@ -245,7 +245,7 @@ export async function triggerAtenxion(
   );
 
   const user = await User.findById(application.vendorId);
-  const eventId = `wasco_vq_event_${crypto.randomUUID()}`;
+  const eventId = `apex_vq_event_${crypto.randomUUID()}`;
 
   const payload: Record<string, unknown> = {
     event_id: eventId,

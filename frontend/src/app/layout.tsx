@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import ThemeRegistry from '@/theme/ThemeRegistry';
 import AuthProvider from '@/components/auth/AuthProvider';
+import { APP_METADATA, BRAND } from '@/config/data';
 import './globals.css';
 
 const inter = Inter({
@@ -10,8 +11,11 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: 'Wasco Energy - Vendor Qualification Portal',
-  description: 'Vendor qualification and onboarding portal for Wasco Energy suppliers',
+  title: {
+    default: APP_METADATA.title,
+    template: `%s | ${BRAND.fullName}`,
+  },
+  description: APP_METADATA.description,
 };
 
 export default function RootLayout({

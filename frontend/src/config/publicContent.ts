@@ -1,3 +1,5 @@
+import { BRAND } from './data';
+
 export const PUBLIC_IMAGES = {
   heroPipeline:
     'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&w=1920&q=80',
@@ -53,7 +55,7 @@ export const HERO_SLIDES = [
     title: 'Committed to Net Zero Operational Emissions by 2026',
     subtitle:
       'Integrating economic, environmental, and social considerations into our business strategy for a sustainable future.',
-    cta: { label: 'About Wasco', href: '/about' },
+    cta: { label: `About ${BRAND.name}`, href: '/about' },
   },
 ] as const;
 

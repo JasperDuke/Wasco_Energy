@@ -20,6 +20,7 @@ import {
   BUSINESS_DIVISIONS,
   PUBLIC_IMAGES,
 } from '@/config/publicContent';
+import { BRAND } from '@/config/data';
 import EnergySavingsLeafOutlinedIcon from '@mui/icons-material/EnergySavingsLeafOutlined';
 import HandshakeOutlinedIcon from '@mui/icons-material/HandshakeOutlined';
 import SpeedOutlinedIcon from '@mui/icons-material/SpeedOutlined';
@@ -58,7 +59,7 @@ export default function HomePage() {
         <SectionHeading
           overline="Our Divisions"
           title="Integrated Energy Solutions Across the Value Chain"
-          subtitle="From pipeline coating and corrosion protection to world-class fabrication and bioenergy — Wasco delivers comprehensive solutions for the global energy industry."
+          subtitle={`From pipeline coating and corrosion protection to world-class fabrication and bioenergy — ${BRAND.name} delivers comprehensive solutions for the global energy industry.`}
         />
         <Grid container spacing={3}>
           {BUSINESS_DIVISIONS.map((division) => (
@@ -81,13 +82,13 @@ export default function HomePage() {
           <Grid container spacing={6} alignItems="center">
             <Grid size={{ xs: 12, md: 6 }}>
               <Typography variant="overline" color="primary.main" fontWeight={700} sx={{ letterSpacing: 2 }}>
-                About Wasco Berhad
+                About {BRAND.legalName}
               </Typography>
               <Typography variant="h3" fontWeight={700} sx={{ mt: 1, mb: 2, fontSize: { xs: '1.75rem', md: '2.25rem' } }}>
                 Vision With Action for a Globally Sustainable Future
               </Typography>
               <Typography variant="body1" color="text.secondary" paragraph sx={{ lineHeight: 1.9 }}>
-                Since 1999, Wasco Berhad has emerged as a leading global energy solutions provider,
+                Since 1999, {BRAND.legalName} has emerged as a leading global energy solutions provider,
                 listed on the Main Market of Bursa Malaysia Securities Berhad. With a diverse
                 workforce exceeding 5,000 employees across 40+ nationalities, our operations span
                 12 countries worldwide.
@@ -146,7 +147,7 @@ export default function HomePage() {
         <Container maxWidth="lg">
           <SectionHeading
             overline="Vendor Portal"
-            title="Why Partner With Wasco Energy?"
+            title={`Why Partner With ${BRAND.fullName}?`}
             subtitle="Our streamlined vendor qualification portal connects qualified suppliers with world-class energy projects."
           />
           <Grid container spacing={3}>

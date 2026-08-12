@@ -10,6 +10,7 @@ import PublicLayout from '@/components/layouts/PublicLayout';
 import PageHero from '@/components/public/PageHero';
 import SectionHeading from '@/components/public/SectionHeading';
 import { PUBLIC_IMAGES } from '@/config/publicContent';
+import { BRAND } from '@/config/data';
 
 export default function AboutPage() {
   return (
@@ -17,7 +18,7 @@ export default function AboutPage() {
       <PageHero
         overline="About Us"
         title="Building a Sustainable Energy Future Since 1999"
-        subtitle="Wasco Berhad is a globally integrated infrastructure group listed on Bursa Malaysia, delivering excellence across pipeline services, energy fabrication, and bioenergy."
+        subtitle={`${BRAND.legalName} is a globally integrated infrastructure group listed on Bursa Malaysia, delivering excellence across pipeline services, energy fabrication, and bioenergy.`}
         image={PUBLIC_IMAGES.about}
       />
 
@@ -25,7 +26,7 @@ export default function AboutPage() {
         <Grid container spacing={6} alignItems="center">
           <Grid size={{ xs: 12, md: 6 }}>
             <Typography variant="body1" color="text.secondary" paragraph sx={{ fontSize: '1.05rem', lineHeight: 1.9 }}>
-              Wasco Berhad has emerged as a leading global energy solutions provider with operations
+              {BRAND.legalName} has emerged as a leading global energy solutions provider with operations
               spanning 12 countries. Our diverse workforce of over 5,000 employees representing
               more than 40 nationalities brings world-class expertise to every project.
             </Typography>

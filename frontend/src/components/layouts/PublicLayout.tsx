@@ -19,6 +19,7 @@ import MenuIcon from '@mui/icons-material/Menu';
 import DashboardOutlinedIcon from '@mui/icons-material/DashboardOutlined';
 import { useAuthStore } from '@/stores/authStore';
 import { getDashboardPath } from '@/utils/helpers';
+import { BRAND } from '@/config/data';
 
 const navLinks = [
   { label: 'Home', href: '/' },
@@ -60,13 +61,13 @@ export default function PublicLayout({ children }: PublicLayoutProps) {
               href="/"
               sx={{ display: 'flex', alignItems: 'center', gap: 1.5, textDecoration: 'none', mr: 4 }}
             >
-              <Image src="/favicon.svg" alt="Wasco Energy" width={36} height={36} />
+              <Image src="/favicon.svg" alt={BRAND.fullName} width={36} height={36} />
               <Box>
                 <Typography variant="subtitle1" sx={{ fontWeight: 700, color: 'primary.main', lineHeight: 1.1 }}>
-                  Wasco Energy
+                  {BRAND.fullName}
                 </Typography>
                 <Typography variant="caption" color="text.secondary" sx={{ display: { xs: 'none', sm: 'block' } }}>
-                  Vendor Qualification Portal
+                  {BRAND.portalTagline}
                 </Typography>
               </Box>
             </Box>
@@ -173,7 +174,7 @@ export default function PublicLayout({ children }: PublicLayoutProps) {
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, mb: 2 }}>
                 <Image src="/favicon.svg" alt="" width={32} height={32} />
                 <Typography variant="h6" fontWeight={700}>
-                  Wasco Energy
+                  {BRAND.fullName}
                 </Typography>
               </Box>
               <Typography variant="body2" sx={{ opacity: 0.85, maxWidth: 420, lineHeight: 1.8 }}>
@@ -203,13 +204,13 @@ export default function PublicLayout({ children }: PublicLayoutProps) {
                 Contact
               </Typography>
               <Typography variant="body2" sx={{ opacity: 0.85 }}>
-                Level 12, Menara Wasco
+                Level 12, {BRAND.buildingName}
               </Typography>
               <Typography variant="body2" sx={{ opacity: 0.85 }}>
                 Kuala Lumpur, Malaysia
               </Typography>
               <Typography variant="body2" sx={{ opacity: 0.85, mt: 1 }}>
-                procurement@wascoenergy.com
+                {BRAND.contactEmail}
               </Typography>
               <Typography variant="body2" sx={{ opacity: 0.85 }}>
                 +60 3 1234 5678
@@ -217,7 +218,7 @@ export default function PublicLayout({ children }: PublicLayoutProps) {
             </Box>
           </Box>
           <Typography variant="caption" sx={{ display: 'block', mt: 4, opacity: 0.6 }}>
-            © {new Date().getFullYear()} Wasco Energy Berhad. All rights reserved.
+            © {new Date().getFullYear()} {BRAND.legalFullName}. All rights reserved.
           </Typography>
         </Container>
       </Box>

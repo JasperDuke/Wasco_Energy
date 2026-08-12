@@ -11,13 +11,14 @@ import PublicLayout from '@/components/layouts/PublicLayout';
 import PageHero from '@/components/public/PageHero';
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 import { PUBLIC_IMAGES } from '@/config/publicContent';
+import { BRAND } from '@/config/data';
 
 const steps = [
   'Register your company on our vendor portal',
   'Complete the dynamic onboarding form',
   'Upload required qualification documents',
   'Await automated verification and review',
-  'Receive approval and start partnering with Wasco',
+  `Receive approval and start partnering with ${BRAND.name}`,
 ];
 
 export default function BecomeVendorPage() {
@@ -36,7 +37,7 @@ export default function BecomeVendorPage() {
               Why Partner With Us?
             </Typography>
             <Typography variant="body1" color="text.secondary" paragraph>
-              Wasco Energy works with hundreds of qualified vendors worldwide.
+              {BRAND.fullName} works with hundreds of qualified vendors worldwide.
               Our procurement process is transparent, efficient, and designed to
               give every supplier a fair opportunity.
             </Typography>

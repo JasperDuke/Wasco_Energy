@@ -7,6 +7,7 @@ import PageHero from '@/components/public/PageHero';
 import SectionHeading from '@/components/public/SectionHeading';
 import ImageFeatureCard from '@/components/public/ImageFeatureCard';
 import { PUBLIC_IMAGES } from '@/config/publicContent';
+import { BRAND } from '@/config/data';
 
 const services = [
   {
@@ -53,7 +54,7 @@ export default function ServicesPage() {
       <PageHero
         overline="Our Services"
         title="Comprehensive Energy Solutions for Every Stage of the Value Chain"
-        subtitle="From pipeline coating to world-class fabrication — Wasco delivers integrated services trusted by the global energy industry."
+        subtitle={`From pipeline coating to world-class fabrication — ${BRAND.name} delivers integrated services trusted by the global energy industry.`}
         image={PUBLIC_IMAGES.services}
       />
 

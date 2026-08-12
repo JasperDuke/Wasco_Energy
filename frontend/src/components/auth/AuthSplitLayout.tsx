@@ -8,6 +8,7 @@ import PrecisionManufacturingOutlinedIcon from '@mui/icons-material/PrecisionMan
 import SecurityOutlinedIcon from '@mui/icons-material/SecurityOutlined';
 import PublicOutlinedIcon from '@mui/icons-material/PublicOutlined';
 import ArrowBackOutlinedIcon from '@mui/icons-material/ArrowBackOutlined';
+import { BRAND } from '@/config/data';
 
 const VALUE_PROPS = [
   {
@@ -41,8 +42,8 @@ export default function AuthSplitLayout({
   children,
   heroImage,
   heroTitle = 'Partner with a Global Energy Leader',
-  heroSubtitle = 'Join Wasco Energy\'s qualified vendor network and collaborate on world-class pipeline, engineering, and energy projects.',
-  portalLabel = 'Vendor Qualification Portal',
+  heroSubtitle = `Join ${BRAND.fullName}'s qualified vendor network and collaborate on world-class pipeline, engineering, and energy projects.`,
+  portalLabel = BRAND.portalTagline,
   contentMaxWidth = 480,
   formAlign = 'center',
 }: AuthSplitLayoutProps) {
@@ -81,10 +82,10 @@ export default function AuthSplitLayout({
               color: 'inherit',
             }}
           >
-            <Image src="/favicon.svg" alt="Wasco Energy" width={40} height={40} />
+            <Image src="/favicon.svg" alt={BRAND.fullName} width={40} height={40} />
             <Box>
               <Typography variant="subtitle1" fontWeight={700} lineHeight={1.2}>
-                Wasco Energy
+                {BRAND.fullName}
               </Typography>
               <Typography variant="caption" sx={{ opacity: 0.85 }}>
                 {portalLabel}

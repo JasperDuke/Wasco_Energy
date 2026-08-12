@@ -17,6 +17,7 @@ import { authService } from '@/services/authService';
 import { VendorRegistration } from '@/types';
 import { VENDOR_GROUPS, VENDOR_CATEGORIES, COUNTRIES } from '@/utils/constants';
 import { PUBLIC_IMAGES } from '@/config/publicContent';
+import { BRAND } from '@/config/data';
 
 export default function RegisterPage() {
   const [error, setError] = useState('');
@@ -50,7 +51,7 @@ export default function RegisterPage() {
     <AuthSplitLayout
       heroImage={PUBLIC_IMAGES.vendor}
       heroTitle="Join Our Qualified Vendor Network"
-      heroSubtitle="Register your company to begin the Wasco Energy vendor qualification process and unlock opportunities across our global energy projects."
+      heroSubtitle={`Register your company to begin the ${BRAND.fullName} vendor qualification process and unlock opportunities across our global energy projects.`}
       contentMaxWidth={720}
       formAlign="start"
     >
@@ -64,10 +65,10 @@ export default function RegisterPage() {
         }}
       >
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, mb: 3 }}>
-          <Image src="/favicon.svg" alt="Wasco Energy" width={36} height={36} />
+          <Image src="/favicon.svg" alt={BRAND.fullName} width={36} height={36} />
           <Box>
             <Typography variant="subtitle1" fontWeight={700} color="primary.main" lineHeight={1.2}>
-              Wasco Energy
+              {BRAND.fullName}
             </Typography>
             <Typography variant="caption" color="text.secondary">
               Vendor Registration

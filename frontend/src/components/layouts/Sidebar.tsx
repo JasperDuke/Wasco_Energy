@@ -28,6 +28,7 @@ import { useSidebarStore } from '@/stores/sidebarStore';
 import { useAuthStore } from '@/stores/authStore';
 import { NavItem } from '@/types';
 import { isNavItemActive } from '@/utils/navigation';
+import { BRAND } from '@/config/data';
 
 const DRAWER_WIDTH = 260;
 
@@ -48,7 +49,7 @@ interface SidebarProps {
   title?: string;
 }
 
-export default function Sidebar({ navItems, title = 'Wasco Portal' }: SidebarProps) {
+export default function Sidebar({ navItems, title = BRAND.portalName }: SidebarProps) {
   const pathname = usePathname();
   const router = useRouter();
   const { isOpen, close } = useSidebarStore();
@@ -68,10 +69,10 @@ export default function Sidebar({ navItems, title = 'Wasco Portal' }: SidebarPro
           href="/"
           sx={{ display: 'flex', alignItems: 'center', gap: 1.5, textDecoration: 'none', mb: 0.5 }}
         >
-          <Image src="/favicon.svg" alt="Wasco" width={32} height={32} />
+          <Image src="/favicon.svg" alt={BRAND.name} width={32} height={32} />
           <Box>
             <Typography variant="subtitle2" fontWeight={700} color="primary.main" lineHeight={1.2}>
-              Wasco Energy
+              {BRAND.fullName}
             </Typography>
             <Typography variant="caption" color="text.secondary">
               {title}
