@@ -3,6 +3,7 @@ import { Inter } from 'next/font/google';
 import ThemeRegistry from '@/theme/ThemeRegistry';
 import AuthProvider from '@/components/auth/AuthProvider';
 import { APP_METADATA, BRAND } from '@/config/data';
+import { SITE_ICONS } from '@/config/metadata';
 import './globals.css';
 
 const inter = Inter({
@@ -16,6 +17,7 @@ export const metadata: Metadata = {
     template: `%s | ${BRAND.fullName}`,
   },
   description: APP_METADATA.description,
+  icons: SITE_ICONS,
 };
 
 export default function RootLayout({

@@ -9,9 +9,8 @@ import Alert from '@mui/material/Alert';
 import Divider from '@mui/material/Divider';
 import Grid from '@mui/material/Grid2';
 import Link from 'next/link';
-import Image from 'next/image';
 import PersonAddOutlinedIcon from '@mui/icons-material/PersonAddOutlined';
-import { AppTextField, AppSelect, AppButton } from '@/components/common';
+import { AppTextField, AppSelect, AppButton, BrandLogo } from '@/components/common';
 import AuthSplitLayout from '@/components/auth/AuthSplitLayout';
 import { authService } from '@/services/authService';
 import { VendorRegistration } from '@/types';
@@ -65,7 +64,7 @@ export default function RegisterPage() {
         }}
       >
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, mb: 3 }}>
-          <Image src="/favicon.svg" alt={BRAND.fullName} width={36} height={36} />
+          <BrandLogo size={36} />
           <Box>
             <Typography variant="subtitle1" fontWeight={700} color="primary.main" lineHeight={1.2}>
               {BRAND.fullName}

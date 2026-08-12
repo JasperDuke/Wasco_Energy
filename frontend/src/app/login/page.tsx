@@ -9,9 +9,8 @@ import Paper from '@mui/material/Paper';
 import Alert from '@mui/material/Alert';
 import Divider from '@mui/material/Divider';
 import Link from 'next/link';
-import Image from 'next/image';
 import LoginOutlinedIcon from '@mui/icons-material/LoginOutlined';
-import { AppTextField, AppButton } from '@/components/common';
+import { AppTextField, AppButton, BrandLogo } from '@/components/common';
 import AuthSplitLayout from '@/components/auth/AuthSplitLayout';
 import { authService } from '@/services/authService';
 import { useAuthStore } from '@/stores/authStore';
@@ -66,7 +65,7 @@ export default function LoginPage() {
         }}
       >
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, mb: 3 }}>
-          <Image src="/favicon.svg" alt={BRAND.fullName} width={36} height={36} />
+          <BrandLogo size={36} />
           <Box>
             <Typography variant="subtitle1" fontWeight={700} color="primary.main" lineHeight={1.2}>
               {BRAND.fullName}

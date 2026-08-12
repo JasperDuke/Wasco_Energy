@@ -3,7 +3,7 @@
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Link from 'next/link';
-import Image from 'next/image';
+import { BrandLogo } from '@/components/common';
 import PrecisionManufacturingOutlinedIcon from '@mui/icons-material/PrecisionManufacturingOutlined';
 import SecurityOutlinedIcon from '@mui/icons-material/SecurityOutlined';
 import PublicOutlinedIcon from '@mui/icons-material/PublicOutlined';
@@ -82,7 +82,7 @@ export default function AuthSplitLayout({
               color: 'inherit',
             }}
           >
-            <Image src="/favicon.svg" alt={BRAND.fullName} width={40} height={40} />
+            <BrandLogo size={40} />
             <Box>
               <Typography variant="subtitle1" fontWeight={700} lineHeight={1.2}>
                 {BRAND.fullName}

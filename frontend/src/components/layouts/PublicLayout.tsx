@@ -13,10 +13,10 @@ import List from '@mui/material/List';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemText from '@mui/material/ListItemText';
 import Link from 'next/link';
-import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import MenuIcon from '@mui/icons-material/Menu';
 import DashboardOutlinedIcon from '@mui/icons-material/DashboardOutlined';
+import { BrandLogo } from '@/components/common';
 import { useAuthStore } from '@/stores/authStore';
 import { getDashboardPath } from '@/utils/helpers';
 import { BRAND } from '@/config/data';
@@ -61,7 +61,7 @@ export default function PublicLayout({ children }: PublicLayoutProps) {
               href="/"
               sx={{ display: 'flex', alignItems: 'center', gap: 1.5, textDecoration: 'none', mr: 4 }}
             >
-              <Image src="/favicon.svg" alt={BRAND.fullName} width={36} height={36} />
+              <BrandLogo size={36} />
               <Box>
                 <Typography variant="subtitle1" sx={{ fontWeight: 700, color: 'primary.main', lineHeight: 1.1 }}>
                   {BRAND.fullName}
@@ -172,7 +172,7 @@ export default function PublicLayout({ children }: PublicLayoutProps) {
           <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: '2fr 1fr 1fr' }, gap: 4 }}>
             <Box>
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, mb: 2 }}>
-                <Image src="/favicon.svg" alt="" width={32} height={32} />
+                <BrandLogo size={32} alt="" />
                 <Typography variant="h6" fontWeight={700}>
                   {BRAND.fullName}
                 </Typography>

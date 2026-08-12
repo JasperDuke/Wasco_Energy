@@ -12,8 +12,8 @@ import Divider from '@mui/material/Divider';
 import Button from '@mui/material/Button';
 import { usePathname, useRouter } from 'next/navigation';
 import Link from 'next/link';
-import Image from 'next/image';
 import DashboardOutlinedIcon from '@mui/icons-material/DashboardOutlined';
+import { BrandLogo } from '@/components/common';
 import DescriptionOutlinedIcon from '@mui/icons-material/DescriptionOutlined';
 import PeopleOutlinedIcon from '@mui/icons-material/PeopleOutlined';
 import SettingsOutlinedIcon from '@mui/icons-material/SettingsOutlined';
@@ -69,7 +69,7 @@ export default function Sidebar({ navItems, title = BRAND.portalName }: SidebarP
           href="/"
           sx={{ display: 'flex', alignItems: 'center', gap: 1.5, textDecoration: 'none', mb: 0.5 }}
         >
-          <Image src="/favicon.svg" alt={BRAND.name} width={32} height={32} />
+          <BrandLogo size={32} alt={BRAND.name} />
           <Box>
             <Typography variant="subtitle2" fontWeight={700} color="primary.main" lineHeight={1.2}>
               {BRAND.fullName}

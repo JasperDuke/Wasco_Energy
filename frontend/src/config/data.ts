@@ -13,6 +13,7 @@ export const BRAND = {
   buildingName: `Menara ${BRAND_NAME}`,
   portalTagline: 'Vendor Qualification Portal',
   contactEmail: `procurement@${BRAND_NAME.toLowerCase()}energy.com`,
+  logo: '/icon.png',
 } as const;
 
 export const APP_METADATA = {
