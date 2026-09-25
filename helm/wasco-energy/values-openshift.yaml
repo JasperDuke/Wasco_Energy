@@ -1,0 +1,37 @@
+openshift:
+  enabled: true
+  route:
+    enabled: false
+    tls:
+      enabled: true
+      termination: edge
+      insecureEdgeTerminationPolicy: Redirect
+
+ingress:
+  enabled: false
+  host: wasco-energy.apps.example.com
+
+route:
+  enabled: true
+  host: wasco-energy.apps.example.com
+  tls:
+    enabled: true
+    termination: edge
+    insecureEdgeTerminationPolicy: Redirect
+
+imagePullSecrets:
+  - name: gitlab-registry
+
+backend:
+  secret:
+    existingSecret: wasco-energy-backend-secrets
+
+# Recommended on OpenShift: use MongoDB Atlas, an OpenShift MongoDB operator,
+# or a platform-managed MongoDB instead of the upstream mongo:latest image.
+mongodb:
+  enabled: false
+
+externalMongodb:
+  uri: ""
+  existingSecret: wasco-energy-mongodb
+  uriKey: MONGODB_URI

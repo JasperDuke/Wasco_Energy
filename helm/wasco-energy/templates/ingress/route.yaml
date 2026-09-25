@@ -1,0 +1,84 @@
+{{- if or .Values.route.enabled .Values.openshift.route.enabled }}
+{{- $host := .Values.ingress.host -}}
+{{- if .Values.route.enabled -}}
+{{- $host = required "route.host is required when route.enabled=true" .Values.route.host -}}
+{{- end -}}
+{{- $tlsEnabled := or (and .Values.route.enabled .Values.route.tls.enabled) (and .Values.openshift.route.enabled .Values.openshift.route.tls.enabled) -}}
+{{- $tlsTermination := .Values.route.tls.termination -}}
+{{- $tlsRedirect := .Values.route.tls.insecureEdgeTerminationPolicy -}}
+{{- if and (not .Values.route.enabled) .Values.openshift.route.enabled -}}
+{{- $tlsTermination = .Values.openshift.route.tls.termination -}}
+{{- $tlsRedirect = .Values.openshift.route.tls.insecureEdgeTerminationPolicy -}}
+{{- end -}}
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  name: {{ include "wasco-energy.fullname" . }}
+  labels:
+    {{- include "wasco-energy.labels" . | nindent 4 }}
+  {{- with .Values.route.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+  host: {{ $host | quote }}
+  path: {{ .Values.route.paths.frontend | quote }}
+  to:
+    kind: Service
+    name: {{ include "wasco-energy.frontendName" . }}
+  port:
+    targetPort: http
+  {{- if $tlsEnabled }}
+  tls:
+    termination: {{ $tlsTermination }}
+    insecureEdgeTerminationPolicy: {{ $tlsRedirect }}
+  {{- end }}
+---
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  name: {{ include "wasco-energy.backendName" . }}
+  labels:
+    {{- include "wasco-energy.labels" . | nindent 4 }}
+  {{- with .Values.route.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+  host: {{ $host | quote }}
+  path: {{ .Values.route.paths.api | quote }}
+  to:
+    kind: Service
+    name: {{ include "wasco-energy.backendName" . }}
+  port:
+    targetPort: http
+  {{- if $tlsEnabled }}
+  tls:
+    termination: {{ $tlsTermination }}
+    insecureEdgeTerminationPolicy: {{ $tlsRedirect }}
+  {{- end }}
+---
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  name: {{ include "wasco-energy.backendName" . }}-uploads
+  labels:
+    {{- include "wasco-energy.labels" . | nindent 4 }}
+  {{- with .Values.route.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+  host: {{ $host | quote }}
+  path: {{ .Values.route.paths.uploads | quote }}
+  to:
+    kind: Service
+    name: {{ include "wasco-energy.backendName" . }}
+  port:
+    targetPort: http
+  {{- if $tlsEnabled }}
+  tls:
+    termination: {{ $tlsTermination }}
+    insecureEdgeTerminationPolicy: {{ $tlsRedirect }}
+  {{- end }}
+{{- end }}

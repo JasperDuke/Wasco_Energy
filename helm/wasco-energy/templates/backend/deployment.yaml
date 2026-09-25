@@ -1,0 +1,115 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "wasco-energy.backendName" . }}
+  labels:
+    {{- include "wasco-energy.labels" . | nindent 4 }}
+    app.kubernetes.io/component: backend
+spec:
+  replicas: {{ .Values.backend.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "wasco-energy.selectorLabels" . | nindent 6 }}
+      app.kubernetes.io/component: backend
+  template:
+    metadata:
+      labels:
+        {{- include "wasco-energy.selectorLabels" . | nindent 8 }}
+        app.kubernetes.io/component: backend
+      {{- with .Values.backend.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+    spec:
+      {{- with .Values.backend.podSecurityContext }}
+      securityContext:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- if and .Values.mongodb.enabled .Values.backend.waitForMongo.enabled }}
+      initContainers:
+        - name: wait-for-mongodb
+          image: {{ .Values.backend.waitForMongo.image | quote }}
+          command:
+            - sh
+            - -c
+            - until nc -z {{ include "wasco-energy.mongodbName" . }} {{ .Values.mongodb.service.port }}; do echo waiting for mongodb; sleep 2; done
+      {{- end }}
+      containers:
+        - name: backend
+          image: "{{ .Values.backend.image.repository }}:{{ .Values.backend.image.tag }}"
+          imagePullPolicy: {{ .Values.backend.image.pullPolicy }}
+          securityContext:
+            {{- toYaml .Values.backend.securityContext | nindent 12 }}
+          ports:
+            - name: http
+              containerPort: 4014
+          env:
+            - name: NODE_ENV
+              value: {{ .Values.backend.env.nodeEnv | quote }}
+            - name: PORT
+              value: "4014"
+            - name: MONGODB_URI
+              {{- if .Values.externalMongodb.existingSecret }}
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.externalMongodb.existingSecret }}
+                  key: {{ .Values.externalMongodb.uriKey }}
+              {{- else }}
+              value: {{ include "wasco-energy.mongodbUri" . | quote }}
+              {{- end }}
+            - name: JWT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: {{ default (include "wasco-energy.backendName" .) .Values.backend.secret.existingSecret }}
+                  key: {{ .Values.backend.secret.jwtSecretKey }}
+            - name: JWT_EXPIRES_IN
+              value: {{ .Values.backend.env.jwtExpiresIn | quote }}
+            - name: CLIENT_URL
+              value: {{ default (include "wasco-energy.publicUrl" .) .Values.backend.env.clientUrl | quote }}
+            - name: CORS_ORIGIN
+              value: {{ default (include "wasco-energy.publicUrl" .) .Values.backend.env.corsOrigin | quote }}
+            - name: API_PUBLIC_URL
+              value: {{ default (include "wasco-energy.publicUrl" .) .Values.backend.env.apiPublicUrl | quote }}
+            - name: UPLOAD_DIR
+              value: {{ .Values.backend.env.uploadDir | quote }}
+          readinessProbe:
+            httpGet:
+              path: /api/health
+              port: http
+            initialDelaySeconds: 10
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /api/health
+              port: http
+            initialDelaySeconds: 30
+            periodSeconds: 20
+          volumeMounts:
+            - name: uploads
+              mountPath: /app/uploads
+          resources:
+            {{- toYaml .Values.backend.resources | nindent 12 }}
+      volumes:
+        - name: uploads
+          {{- if .Values.backend.persistence.enabled }}
+          persistentVolumeClaim:
+            claimName: {{ include "wasco-energy.backendName" . }}-uploads
+          {{- else }}
+          emptyDir: {}
+          {{- end }}
+      {{- with .Values.backend.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.backend.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.backend.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}

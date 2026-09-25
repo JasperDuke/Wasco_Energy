@@ -1,0 +1,21 @@
+Wasco Energy has been deployed.
+
+Frontend:
+{{- if .Values.ingress.enabled }}
+  {{ include "wasco-energy.publicUrl" . }}
+{{- else }}
+  kubectl port-forward svc/{{ include "wasco-energy.frontendName" . }} 3000:{{ .Values.frontend.service.port }}
+{{- end }}
+
+Backend health:
+{{- if .Values.ingress.enabled }}
+  {{ include "wasco-energy.publicUrl" . }}/api/health
+{{- else }}
+  kubectl port-forward svc/{{ include "wasco-energy.backendName" . }} 4014:{{ .Values.backend.service.port }}
+  http://localhost:4014/api/health
+{{- end }}
+
+Important:
+  - Replace backend.secret.jwtSecret or use backend.secret.existingSecret for production.
+  - If your GitLab registry is private, set imagePullSecrets.
+  - This chart expects the frontend image to be built with NEXT_PUBLIC_API_URL=/api.

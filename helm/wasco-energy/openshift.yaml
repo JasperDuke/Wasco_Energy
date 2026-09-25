@@ -1,0 +1,31 @@
+# OpenShift values override for Wasco Energy.
+# Replace placeholders before installing into a shared or production cluster.
+
+imagePullSecrets:
+  - name: gitlab-registry
+
+ingress:
+  enabled: false
+
+route:
+  enabled: true
+  # Example: wasco-energy.apps.cluster.example.com
+  host: wasco-energy.apps.example.com
+  tls:
+    enabled: true
+    termination: edge
+    insecureEdgeTerminationPolicy: Redirect
+
+backend:
+  secret:
+    # Create this Secret yourself so placeholder values from values.yaml are not used.
+    existingSecret: wasco-energy-backend-secrets
+
+# Recommended on OpenShift: use MongoDB Atlas, an OpenShift MongoDB operator,
+# or a platform-managed MongoDB instead of the upstream mongo:latest image.
+mongodb:
+  enabled: false
+
+externalMongodb:
+  existingSecret: wasco-energy-mongodb
+  uriKey: MONGODB_URI
